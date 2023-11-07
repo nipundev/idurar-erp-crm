@@ -1,50 +1,26 @@
-import uniqueId from '@/utils/uinqueId';
-import { PlusOutlined, SyncOutlined } from '@ant-design/icons';
-import { Button, Divider, Form, Input, InputNumber, PageHeader, Upload } from 'antd';
-import SetingsSection from './components/SetingsSection';
-import Currency from '../Currency';
-import SelectCurrency from './components/SelectCurrency';
+import useLanguage from '@/locale/useLanguage';
 
-export default function PaymentSettings() {
-  return (
-    <>
-      <PageHeader
-        onBack={() => window.history.back()}
-        title="Payment Settings"
-        ghost={false}
-        extra={[
-          <Button key={`${uniqueId()}`} type="primary" disabled icon={<SyncOutlined />}>
-            Update
-          </Button>,
-        ]}
-        style={{
-          padding: '20px 0px',
-        }}
-      ></PageHeader>
+import GeneralSettingsModule from '@/modules/SettingModule/GeneralSettingsModule';
 
-      <Divider></Divider>
-      <Form>
-        <SetingsSection title="information" description="Update your Currency and Tax">
-          <Form.Item label="Currency">
-            <SelectCurrency />
-          </Form.Item>
-          <Form.Item label="Tax">
-            <InputNumber addonBefore={'%'} placeholder="0" />
-          </Form.Item>
-        </SetingsSection>
+export default function GeneralSettings() {
+  const translate = useLanguage();
 
-        <SetingsSection title="Other details" description="Add your company identifying numbers">
-          <Form.Item label="RC">
-            <Input placeholder="xxxxxx" />
-          </Form.Item>
-          <Form.Item label="NIF">
-            <Input placeholder="xxxxxx" />
-          </Form.Item>
-          <Form.Item label="AI">
-            <Input placeholder="xxxxxx" />
-          </Form.Item>
-        </SetingsSection>
-      </Form>
-    </>
-  );
+  const entity = 'setting';
+
+  const Labels = {
+    PANEL_TITLE: translate('settings'),
+    DATATABLE_TITLE: translate('settings_list'),
+    ADD_NEW_ENTITY: translate('add_new_settings'),
+    ENTITY_NAME: translate('settings'),
+    CREATE_ENTITY: translate('save'),
+    UPDATE_ENTITY: translate('update'),
+    SETTINGS_TITLE: translate('Money Format Settings'),
+  };
+
+  const configPage = {
+    entity,
+    settingsCategory: 'finance_settings',
+    ...Labels,
+  };
+  return <GeneralSettingsModule config={configPage} />;
 }

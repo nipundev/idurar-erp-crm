@@ -1,49 +1,63 @@
-import React, { useState, useEffect } from 'react';
-import { Form, Divider } from 'antd';
+import { useState, useEffect } from 'react';
 
-import { Button, PageHeader, Row, Statistic, Tag } from 'antd';
+import { Button, Tag, Form, Divider } from 'antd';
+import { PageHeader } from '@ant-design/pro-layout';
 
 import { useSelector, useDispatch } from 'react-redux';
+
+import useLanguage from '@/locale/useLanguage';
+
+import { settingsAction } from '@/redux/settings/actions';
 import { erp } from '@/redux/erp/actions';
 import { selectCreatedItem } from '@/redux/erp/selectors';
 
-import { useErpContext } from '@/context/erp';
 import calculate from '@/utils/calculate';
-import uniqueId from '@/utils/uinqueId';
+import { generate as uniqueId } from 'shortid';
 
 import Loading from '@/components/Loading';
 import { CloseCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import { useHistory } from 'react-router-dom';
 
-function SaveForm({ form, config }) {
-  let { CREATE_ENTITY } = config;
+import { useNavigate } from 'react-router-dom';
+
+function SaveForm({ form }) {
+  const translate = useLanguage();
   const handelClick = () => {
     form.submit();
   };
 
   return (
     <Button onClick={handelClick} type="primary" icon={<PlusOutlined />}>
-      {CREATE_ENTITY}
+      {translate('Save')}
     </Button>
   );
 }
 
 export default function CreateItem({ config, CreateForm }) {
-  let { entity, CREATE_ENTITY } = config;
-  const { erpContextAction } = useErpContext();
-  const history = useHistory();
-  const { createPanel } = erpContextAction;
+  const translate = useLanguage();
   const dispatch = useDispatch();
-  const { isLoading, isSuccess } = useSelector(selectCreatedItem);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    dispatch(settingsAction.list({ entity: 'setting' }));
+  }, []);
+  let { entity } = config;
+
+  const { isLoading, isSuccess, result } = useSelector(selectCreatedItem);
   const [form] = Form.useForm();
   const [subTotal, setSubTotal] = useState(0);
+  const [offerSubTotal, setOfferSubTotal] = useState(0);
   const handelValuesChange = (changedValues, values) => {
     const items = values['items'];
     let subTotal = 0;
+    let subOfferTotal = 0;
 
     if (items) {
       items.map((item) => {
         if (item) {
+          if (item.offerPrice && item.quantity) {
+            let offerTotal = calculate.multiply(item['quantity'], item['offerPrice']);
+            subOfferTotal = calculate.add(subOfferTotal, offerTotal);
+          }
           if (item.quantity && item.price) {
             let total = calculate.multiply(item['quantity'], item['price']);
             //sub total
@@ -52,6 +66,7 @@ export default function CreateItem({ config, CreateForm }) {
         }
       });
       setSubTotal(subTotal);
+      setOfferSubTotal(subOfferTotal);
     }
   };
 
@@ -60,28 +75,14 @@ export default function CreateItem({ config, CreateForm }) {
       form.resetFields();
       dispatch(erp.resetAction({ actionType: 'create' }));
       setSubTotal(0);
-      createPanel.close();
-      dispatch(erp.list({ entity }));
+      setOfferSubTotal(0);
+      navigate(`/${entity.toLowerCase()}/read/${result._id}`);
     }
     return () => {};
   }, [isSuccess]);
 
   const onSubmit = (fieldsValue) => {
     if (fieldsValue) {
-      // if (fieldsValue.expiredDate) {
-      //   const newDate = fieldsValue["expiredDate"].format("DD/MM/YYYY");
-      //   fieldsValue = {
-      //     ...fieldsValue,
-      //     expiredDate: newDate,
-      //   };
-      // }
-      // if (fieldsValue.date) {
-      //   const newDate = fieldsValue["date"].format("DD/MM/YYYY");
-      //   fieldsValue = {
-      //     ...fieldsValue,
-      //     date: newDate,
-      //   };
-      // }
       if (fieldsValue.items) {
         let newList = [...fieldsValue.items];
         newList.map((item) => {
@@ -100,22 +101,21 @@ export default function CreateItem({ config, CreateForm }) {
     <>
       <PageHeader
         onBack={() => {
-          // createPanel.close();
-          history.push(`/${entity.toLowerCase()}`);
+          navigate(`/${entity.toLowerCase()}`);
         }}
-        title={CREATE_ENTITY}
+        title={translate('New')}
         ghost={false}
-        tags={<Tag color="volcano">Draft</Tag>}
+        tags={<Tag color="gray">Draft</Tag>}
         // subTitle="This is create page"
         extra={[
           <Button
             key={`${uniqueId()}`}
-            onClick={() => history.push(`/${entity.toLowerCase()}`)}
+            onClick={() => navigate(`/${entity.toLowerCase()}`)}
             icon={<CloseCircleOutlined />}
           >
-            Cancel
+            {translate('Cancel')}
           </Button>,
-          <SaveForm form={form} config={config} key={`${uniqueId()}`} />,
+          <SaveForm form={form} key={`${uniqueId()}`} />,
         ]}
         style={{
           padding: '20px 0px',
@@ -124,7 +124,7 @@ export default function CreateItem({ config, CreateForm }) {
       <Divider dashed />
       <Loading isLoading={isLoading}>
         <Form form={form} layout="vertical" onFinish={onSubmit} onValuesChange={handelValuesChange}>
-          <CreateForm subTotal={subTotal} />
+          <CreateForm subTotal={subTotal} offerTotal={offerSubTotal} />
         </Form>
       </Loading>
     </>

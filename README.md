@@ -2,20 +2,36 @@
     <a href="https://www.idurarapp.com/">
   <img src="https://avatars.githubusercontent.com/u/50052356?s=200&v=4" width="128px" />
     </a>
-    <h1>Free Open Source ERP / CRM | Node.js React.js</h1>
+    <h1>Open "Fair-Code" Source ERP / CRM | Node.js React.js</h1>
     <p align="center">
         <p>IDURAR ERP CRM | Simple To Use </p>
     </p>
     
   [www.idurarapp.com/open-source-erp-crm/](https://www.idurarapp.com/open-source-erp-crm/)
 
-IDURAR is Open Source ERP / CRM (Invoice / Inventory / Accounting / HR) Based on Advanced Mern Stack (Node.js / Express.js / MongoDb / React.js ) with Ant Design (AntD) and Redux
+IDURAR is Open "Fair-Code" Source ERP / CRM (Invoice / Inventory / Accounting / HR) Based on Advanced Mern Stack (Node.js / Express.js / MongoDb / React.js ) with Ant Design (AntD) and Redux
 
 </div>
 
+**Live App Demo** : [https://idurarapp.com/demo/](https://idurarapp.com/demo/)
+
 ```
-:rocket: Give a ⭐️ & Fork to this project ... Happy coding! 🤩
+🚀 Give a Star ⭐️ & Fork to this project ... Happy coding! 🤩`
 ```
+
+## License
+
+IDURAR is [fair-code](http://faircode.io) distributed under the
+[**Developer Trial Use Licensee**](https://github.com/idurar/idurar-erp-crm/blob/master/LICENSE) and the
+[**IDURAR Enterprise License**](https://github.com/idurar/idurar-erp-crm/blob/master/LICENSE_EE).
+
+Commercial licenses are available : [Get in touch](mailto:hello@idurarapp.com)
+
+# How To Deploy IDURAR ERP CRM : 
+🔥 I would like to invite you for a weekly free IDURAR Webinar (Node.js React.js course), where you learn how to deploy IDURAR on cloud , and create a new api and new crud app with IDURAR in just one hour ?
+Please fill this form if you are interested : [https://forms.gle/qz2YZ3xQFQ77bGhS8](https://forms.gle/qz2YZ3xQFQ77bGhS8)
+
+The Webinar will be this Wednesday at 1pm GMT.
 
 ## Our Sponsors
 
@@ -25,13 +41,13 @@ IDURAR is Open Source ERP / CRM (Invoice / Inventory / Accounting / HR) Based on
 
 #
 
-![Open Source ERP / CRM - MERN Stack (Node.js/React.js)](https://user-images.githubusercontent.com/50052356/141647096-dcb66696-6103-4850-ae21-9fc97a412252.png)
+![Open "Fair-Code" Source ERP / CRM - MERN Stack (Node.js/React.js)](https://user-images.githubusercontent.com/50052356/141647096-dcb66696-6103-4850-ae21-9fc97a412252.png)
 
-## Open Source ERP / CRM App
+## Open "Fair-Code" Source ERP / CRM App
 
-IDURAR is Open Source ERP / CRM (Invoice / Inventory / Accounting / HR) Based on Mern Stack (Node.js / Express.js / MongoDb / React.js ) with Ant Design (AntD) and Redux
+IDURAR is Open "Fair-Code" Source ERP / CRM (Invoice / Inventory / Accounting / HR) Based on Mern Stack (Node.js / Express.js / MongoDb / React.js ) with Ant Design (AntD) and Redux
 
-**Live App Demo** : [https://idurarapp.com/demo/](https://idurarapp.com/demo/) "Please use chrome"
+**Live App Demo** : [https://idurarapp.com/demo/](https://idurarapp.com/demo/)
 
 `username : admin@demo.com password : admin123`
 
@@ -55,16 +71,15 @@ cd idurar-erp-crm
 
 - add your current IP address to the MongoDB database's IP whitelist to allow connections (this is needed whenever your ip changes)
 
-#### Step 3: Create the Environment File
+#### Step 3: Edit the Environment File
 
-- Create a file named .variables.env in the root directory.
-- Copy all variables from tmp.variables.env .
-- Paste the copied variables inside .variables.env.
+- Check a file named .env in the /backend directory.
+
   This file will store environment variables for the project to run.
 
 #### Step 4: Update MongoDB URI
 
-In the .variables.env file, find the line that reads:
+In the .env file, find the line that reads:
 
 `DATABASE="your-mongodb-uri"`
 
@@ -72,7 +87,7 @@ Replace "your-mongodb-uri" with the actual URI of your MongoDB database.
 
 #### Step 5: Install Backend Dependencies
 
-In your terminal, navigate to the root directory of the project and run the following command to install the backend dependencies:
+In your terminal, navigate to the /backend directory of the project and run the following command to install the backend dependencies:
 
 ```bash
 npm install
@@ -82,7 +97,7 @@ This command will install all the required packages specified in the package.jso
 
 #### Step 6: Run Setup Script
 
-While still in the root directory of the project, execute the following command to run the setup script:
+While still in the /backend directory of the project, execute the following command to run the setup script:
 
 ```bash
 node setup/setup.js
@@ -111,8 +126,6 @@ cd frontend
 ```bash
 npm install
 ```
-
-This command will navigate to the frontend directory within the project and install all the required packages for the frontend.
 
 #### Step 9: Run the Frontend Server
 
@@ -198,11 +211,11 @@ But if you'd like to check it out more news and website you can always check it 
 
 ## License
 
-MIT/Massachusetts Institute of Technology(here [LICENSE](https://github.com/idurar/idurar-erp-crm/blob/master/LICENSE))
+IDURAR is [fair-code](http://faircode.io) distributed under the
+[**Developer Trial Use Licensee**](https://github.com/idurar/idurar-erp-crm/blob/master/LICENSE) and the
+[**IDURAR Enterprise License**](https://github.com/idurar/idurar-erp-crm/blob/master/LICENSE_EE).
 
-The IDURAR code is licensed by Massachusetts Institute of Technology.
-
-By contributing to IDURAR, you will be agreeing that your contributions will be licensed under its Massachusetts Institute of Technology(MIT).
+Commercial licenses are available : [Get in touch](mailto:hello@idurarapp.com)
 
 ## Show your support
 

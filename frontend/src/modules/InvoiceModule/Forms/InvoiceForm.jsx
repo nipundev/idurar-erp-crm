@@ -1,34 +1,51 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import dayjs from 'dayjs';
 import { Form, Input, InputNumber, Button, Select, Divider, Row, Col } from 'antd';
 
 import { PlusOutlined } from '@ant-design/icons';
 
-import { DatePicker } from '@/components/CustomAntd';
+import { DatePicker } from 'antd';
 
 import AutoCompleteAsync from '@/components/AutoCompleteAsync';
 
 import ItemRow from '@/modules/ErpPanelModule/ItemRow';
 
-
 import MoneyInputFormItem from '@/components/MoneyInputFormItem';
+import { selectFinanceSettings } from '@/redux/settings/selectors';
+import useLanguage from '@/locale/useLanguage';
 
 import calculate from '@/utils/calculate';
+import { useSelector } from 'react-redux';
+import SelectAsync from "@/components/SelectAsync";
 
 export default function InvoiceForm({ subTotal = 0, current = null }) {
+  const { last_invoice_number } = useSelector(selectFinanceSettings);
+
+  if (!last_invoice_number) {
+    return <></>;
+  }
+
+  return <LoadInvoiceForm subTotal={subTotal} current={current} />;
+}
+
+function LoadInvoiceForm({ subTotal = 0, current = null }) {
+  const translate = useLanguage();
+  const { last_invoice_number } = useSelector(selectFinanceSettings);
   const [total, setTotal] = useState(0);
   const [taxRate, setTaxRate] = useState(0);
   const [taxTotal, setTaxTotal] = useState(0);
   const [currentYear, setCurrentYear] = useState(() => new Date().getFullYear());
+  const [lastNumber, setLastNumber] = useState(() => last_invoice_number + 1);
   const handelTaxChange = (value) => {
-    setTaxRate(value);
+    setTaxRate(value/100);
   };
 
   useEffect(() => {
     if (current) {
-      const { taxRate = 0, year } = current;
+      const { taxRate = 0, year, number } = current;
       setTaxRate(taxRate);
       setCurrentYear(year);
+      setLastNumber(number);
     }
   }, [current]);
   useEffect(() => {
@@ -49,31 +66,29 @@ export default function InvoiceForm({ subTotal = 0, current = null }) {
         <Col className="gutter-row" span={9}>
           <Form.Item
             name="client"
-            label="Client"
+            label={translate('Client')}
             rules={[
               {
                 required: true,
-                message: 'Please input your client!',
               },
             ]}
           >
             <AutoCompleteAsync
               entity={'client'}
               displayLabels={['company']}
-              searchFields={'company,managerSurname,managerName'}
+              searchFields={'company'}
               // onUpdateValue={autoCompleteUpdate}
             />
           </Form.Item>
         </Col>
         <Col className="gutter-row" span={5}>
           <Form.Item
-            label="Number"
+            label={translate('number')}
             name="number"
-            initialValue={1}
+            initialValue={lastNumber}
             rules={[
               {
                 required: true,
-                message: 'Please input invoice number!',
               },
             ]}
           >
@@ -82,13 +97,12 @@ export default function InvoiceForm({ subTotal = 0, current = null }) {
         </Col>
         <Col className="gutter-row" span={5}>
           <Form.Item
-            label="year"
+            label={translate('year')}
             name="year"
             initialValue={currentYear}
             rules={[
               {
                 required: true,
-                message: 'Please input invoice year!',
               },
             ]}
           >
@@ -97,34 +111,33 @@ export default function InvoiceForm({ subTotal = 0, current = null }) {
         </Col>
         <Col className="gutter-row" span={5}>
           <Form.Item
-            label="status"
+            label={translate('status')}
             name="status"
             rules={[
               {
                 required: false,
-                message: 'Please input invoice status!',
               },
             ]}
             initialValue={'draft'}
           >
             <Select
               options={[
-                { value: 'draft', label: 'Draft' },
-                { value: 'pending', label: 'Pending' },
-                { value: 'sent', label: 'Sent' },
+                { value: 'draft', label: translate('Draft') },
+                { value: 'pending', label: translate('Pending') },
+                { value: 'sent', label: translate('Pending') },
               ]}
             ></Select>
           </Form.Item>
         </Col>
         <Col className="gutter-row" span={9}>
-          <Form.Item label="Note" name="note">
+          <Form.Item label={translate('Note')} name="note">
             <Input />
           </Form.Item>
         </Col>
         <Col className="gutter-row" span={8}>
           <Form.Item
             name="date"
-            label="Date"
+            label={translate('Date')}
             rules={[
               {
                 required: true,
@@ -139,7 +152,7 @@ export default function InvoiceForm({ subTotal = 0, current = null }) {
         <Col className="gutter-row" span={7}>
           <Form.Item
             name="expiredDate"
-            label="Expire Date"
+            label={translate('Expire Date')}
             rules={[
               {
                 required: true,
@@ -155,19 +168,19 @@ export default function InvoiceForm({ subTotal = 0, current = null }) {
       <Divider dashed />
       <Row gutter={[12, 12]} style={{ position: 'relative' }}>
         <Col className="gutter-row" span={5}>
-          <p>Item</p>
+          <p>{translate('Item')}</p>
         </Col>
         <Col className="gutter-row" span={7}>
-          <p>Description</p>
+          <p>{translate('Description')}</p>
         </Col>
         <Col className="gutter-row" span={3}>
-          <p>Quantity</p>
+          <p>{translate('Quantity')}</p>{' '}
         </Col>
         <Col className="gutter-row" span={4}>
-          <p>Price</p>
+          <p>{translate('Price')}</p>
         </Col>
         <Col className="gutter-row" span={5}>
-          <p>Total</p>
+          <p>{translate('Total')}</p>
         </Col>
       </Row>
       <Form.List name="items">
@@ -184,7 +197,7 @@ export default function InvoiceForm({ subTotal = 0, current = null }) {
                 icon={<PlusOutlined />}
                 ref={addField}
               >
-                Add field
+                {translate('Add field')}
               </Button>
             </Form.Item>
           </>
@@ -196,7 +209,7 @@ export default function InvoiceForm({ subTotal = 0, current = null }) {
           <Col className="gutter-row" span={5}>
             <Form.Item>
               <Button type="primary" htmlType="submit" icon={<PlusOutlined />} block>
-                Save Invoice
+                {translate('Save')}
               </Button>
             </Form.Item>
           </Col>
@@ -207,7 +220,7 @@ export default function InvoiceForm({ subTotal = 0, current = null }) {
                 paddingTop: '5px',
               }}
             >
-              Sub Total :
+              {translate('Sub Total')} :
             </p>
           </Col>
           <Col className="gutter-row" span={5}>
@@ -220,21 +233,22 @@ export default function InvoiceForm({ subTotal = 0, current = null }) {
               name="taxRate"
               rules={[
                 {
-                  required: false,
-                  message: 'Please input your taxRate!',
+                  required: true,
+                  message: 'Please choose the tax!',
                 },
               ]}
-              initialValue="0"
             >
-              <Select
-                value={taxRate}
-                onChange={handelTaxChange}
-                bordered={false}
-                options={[
-                  { value: 0, label: 'Tax 0 %' },
-                  { value: 0.19, label: 'Tax 19 %' },
-                ]}
-              ></Select>
+              <SelectAsync
+                  value={taxRate}
+                  onChange={handelTaxChange}
+                  bordered={false}
+                  entity={'taxes'}
+                  outputValue={'taxValue'}
+                  displayLabels={['taxName']}
+                  withRedirect={true}
+                  urlToRedirect="/taxes"
+                  redirectLabel="Add New Tax"
+              />
             </Form.Item>
           </Col>
           <Col className="gutter-row" span={5}>
@@ -249,7 +263,7 @@ export default function InvoiceForm({ subTotal = 0, current = null }) {
                 paddingTop: '5px',
               }}
             >
-              Total :
+              {translate('Total')} :
             </p>
           </Col>
           <Col className="gutter-row" span={5}>

@@ -1,18 +1,30 @@
 import { useProfileContext } from '@/context/profileContext';
-import uniqueId from '@/utils/uinqueId';
+import { generate as uniqueId } from 'shortid';
 import { EditOutlined, LockOutlined, LogoutOutlined } from '@ant-design/icons';
-import { Avatar, Button, Col, Descriptions, Divider, PageHeader, Row, Space, Tag } from 'antd';
+import { Avatar, Button, Col, Descriptions, Divider, Row } from 'antd';
+import { PageHeader } from '@ant-design/pro-layout';
 import { useSelector } from 'react-redux';
-import photo from '@/style/images/photo.png';
-import history from '@/utils/history';
-import { selectCurrentItem, selectReadItem } from '@/redux/crud/selectors';
+
+import { useNavigate } from 'react-router-dom';
+
+import { selectCurrentAdmin } from '@/redux/auth/selectors';
+
+import useLanguage from '@/locale/useLanguage';
+import { BASE_URL } from '@/config/serverApiConfig';
+
+import { checkImage } from '@/request';
 
 const AdminInfo = ({ config }) => {
+  const translate = useLanguage();
+  const navigate = useNavigate();
   const { profileContextAction } = useProfileContext();
   const { modal, updatePanel } = profileContextAction;
   const { ENTITY_NAME } = config;
+  const currentAdmin = useSelector(selectCurrentAdmin);
 
-  const { result } = useSelector(selectCurrentItem);
+  const srcImgProfile = checkImage(BASE_URL + currentAdmin?.photo)
+    ? BASE_URL + currentAdmin?.photo
+    : undefined;
 
   return (
     <>
@@ -29,7 +41,7 @@ const AdminInfo = ({ config }) => {
             type="primary"
             icon={<EditOutlined />}
           >
-            Edit
+            {translate('Edit')}
           </Button>,
           <Button
             key={`${uniqueId()}`}
@@ -38,7 +50,7 @@ const AdminInfo = ({ config }) => {
               modal.open();
             }}
           >
-            Update Password
+            {translate('Update Password')}
           </Button>,
         ]}
         style={{
@@ -47,72 +59,39 @@ const AdminInfo = ({ config }) => {
       ></PageHeader>
       <Row align="middle">
         <Col xs={{ span: 24 }} sm={{ span: 7 }} md={{ span: 5 }}>
-          <img
-            className="last left circle pad5"
-            src={photo}
-            style={{
-              width: '100px',
-              height: '100px',
-              border: '2px solid #1B98F5',
-            }}
-          />
+          <Avatar
+            className="last left pad5"
+            src={srcImgProfile}
+            size={96}
+            style={{ color: '#f56a00', backgroundColor: '#fde3cf', fontSize: '48px' }}
+            alt={`${currentAdmin?.name}`}
+          >
+            {currentAdmin?.name.charAt(0).toUpperCase()}
+          </Avatar>
         </Col>
         <Col xs={{ span: 24 }} sm={{ span: 18 }}>
-          <Descriptions labelStyle={{ fontSize: '17px' }} size="small">
-            <Descriptions.Item label="Name" span="3" style={{ paddingTop: '20px' }}>
-              <h3
-                style={{
-                  color: '#22075e',
-                  textTransform: 'capitalize',
-                }}
-              >
-                {result?.name}
-              </h3>
+          <Descriptions column={1} size="middle">
+            <Descriptions.Item label={translate('first name')}>
+              {currentAdmin?.name}
             </Descriptions.Item>
-            <Descriptions.Item label="Surname" span="3">
-              <h3
-                style={{
-                  color: '#22075e',
-                  textTransform: 'capitalize',
-                }}
-              >
-                {result?.surname}
-              </h3>
+            <Descriptions.Item label={translate('last name')}>
+              {currentAdmin?.surname}
             </Descriptions.Item>
-            <Descriptions.Item label="Email" span="3" style={{ paddingTop: '20px' }}>
-              <h3
-                style={{
-                  color: '#22075e',
-                }}
-              >
-                {result?.email}
-              </h3>
-            </Descriptions.Item>
-            <Descriptions.Item label="Role" span="3">
-              <h3
-                style={{
-                  color: '#22075e',
-                  textTransform: 'capitalize',
-                }}
-              >
-                {result?.role}
-              </h3>
-            </Descriptions.Item>
+            <Descriptions.Item label={translate('email')}>{currentAdmin?.email}</Descriptions.Item>
+            <Descriptions.Item label={translate('role')}>{currentAdmin?.role}</Descriptions.Item>
           </Descriptions>
         </Col>
       </Row>
-
       <Divider />
       <Button
         key={`${uniqueId()}`}
         icon={<LogoutOutlined />}
         className="right"
-        onClick={() => history.push('/logout')}
+        onClick={() => navigate('/logout')}
       >
-        Logout
+        {translate('Logout')}
       </Button>
     </>
   );
 };
-
 export default AdminInfo;

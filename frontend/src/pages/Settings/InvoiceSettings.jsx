@@ -1,36 +1,26 @@
-import uniqueId from '@/utils/uinqueId';
-import { SyncOutlined } from '@ant-design/icons';
-import { Button, Divider, Form, Input, Menu, PageHeader } from 'antd';
-import SetingsSection from './components/SetingsSection';
+import useLanguage from '@/locale/useLanguage';
 
-export default function InvoiceSettings() {
-  return (
-    <>
-      <PageHeader
-        onBack={() => window.history.back()}
-        title="Invoice Settings"
-        ghost={false}
-        extra={[
-          <Button key={`${uniqueId()}`} type="primary" disabled icon={<SyncOutlined />}>
-            Update
-          </Button>,
-        ]}
-        style={{
-          padding: '20px 0px',
-        }}
-      ></PageHeader>
+import GeneralSettingsModule from '@/modules/SettingModule/GeneralSettingsModule';
 
-      <Divider></Divider>
-      <Form>
-        <SetingsSection title="details" description="">
-          <Form.Item label="Last invoice number">
-            <Input placeholder="xxxxxx" />
-          </Form.Item>
-          <Form.Item label="Last quote number">
-            <Input placeholder="xxxxxx" />
-          </Form.Item>
-        </SetingsSection>
-      </Form>
-    </>
-  );
+export default function GeneralSettings() {
+  const translate = useLanguage();
+
+  const entity = 'setting';
+
+  const Labels = {
+    PANEL_TITLE: translate('settings'),
+    DATATABLE_TITLE: translate('settings_list'),
+    ADD_NEW_ENTITY: translate('add_new_settings'),
+    ENTITY_NAME: translate('settings'),
+    CREATE_ENTITY: translate('save'),
+    UPDATE_ENTITY: translate('update'),
+    SETTINGS_TITLE: translate('General Settings'),
+  };
+
+  const configPage = {
+    entity,
+    settingsCategory: 'app_settings',
+    ...Labels,
+  };
+  return <GeneralSettingsModule config={configPage} />;
 }
