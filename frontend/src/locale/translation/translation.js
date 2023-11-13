@@ -33,6 +33,13 @@ import ko_kr from './ko_kr';
 import lv_lv from './lv_lv';
 import pt_pt from './pt_pt';
 import hu_hu from './hu_hu';
+import fi_fi from './fi_fi';
+import et_ee from './et_ee';
+import el_gr from './el_gr';
+import lt_lt from './lt_lt';
+import ca_es from './ca_es';
+import fa_ir from './fa_ir';
+import sr_rs from './sr_rs';
 
 const languages = {
   ar_eg,
@@ -70,6 +77,13 @@ const languages = {
   lv_lv,
   pt_pt,
   hu_hu,
+  fi_fi,
+  et_ee,
+  el_gr,
+  lt_lt,
+  ca_es,
+  fa_ir,
+  sr_rs,
 };
 
 export default languages;
